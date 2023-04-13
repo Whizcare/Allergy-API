@@ -28,4 +28,4 @@ jobs:
           context: .
           file: Allergy_Services/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/loginapi:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/allergyk:latest
