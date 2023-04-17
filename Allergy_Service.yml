@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: allergy-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: allergy-api
+  template:
+    metadata:
+      labels:
+        app: allergy-api
+    spec:
+      containers:
+        - name: allergy-api
+          image: dhanush121/allergyk:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: allergy-api-service
+spec:
+  type: ClusterIP
+  selector:
+    app: allergy-api
+  ports:
+    - port: 80
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: allergy-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /api/Allergy/GetAllAllergy
+        pathType: Prefix
+        backend:
+          service:
+            name: allergy-api-service
+            port:
+              number: 80
+      - path: /api/Allergy/AddAllergies
+        pathType: Prefix
+        backend:
+          service:
+            name: allergy-api-service
+            port:
+              number: 80
+   
